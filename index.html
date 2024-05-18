@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Details Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+        .output p {
+            margin: 5px 0;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Payment Details Generator</h1>
+    <div class="input-group">
+        <label for="rate-type">Rate Type</label>
+        <select id="rate-type" onchange="changeForm()">
+            <option value="">Select</option>
+            <option value="in">In</option>
+            <option value="out">Out</option>
+        </select>
+    </div>
+    <div id="form-content">
+        <!-- Form fields will be dynamically inserted here -->
+    </div>
+    <button onclick="generateOutput()">Generate Output</button>
+
+    <div class="output" id="output"></div>
+</div>
+
+<script>
+    function changeForm() {
+        const rateType = document.getElementById('rate-type').value;
+        const formContent = document.getElementById('form-content');
+        
+        if (rateType === 'in') {
+            formContent.innerHTML = `
+                <div class="input-group">
+                    <label for="no">No.</label>
+                    <input type="number" id="no" required>
+                </div>
+                <div class="input-group">
+                    <label for="sn">SN</label>
+                    <input type="text" id="sn" required>
+                </div>
+                <div class="input-group">
+                    <label for="rn">RN</label>
+                    <input type="text" id="rn" required>
+                </div>
+                <div class="input-group">
+                    <label for="paid-payment">Paid Payment</label>
+                    <select id="paid-payment" required>
+                        <option value="Cash">Cash</option>
+                        <option value="Pay">Pay</option>
+                        <option value="Bank">Bank</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="b-in">B In</label>
+                    <select id="b-in" required>
+                        <option value="SMZH K+">SMZH K+</option>
+                        <option value="SMMK K+">SMMK K+</option>
+                        <option value="KKH BBL">KKH BBL</option>
+                        <option value="SMZH BBL">SMZH BBL</option>
+                        <option value="SMMK SCB">SMMK SCB</option>
+                        <option value="SZSK K+">SZSK K+</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" required>
+                </div>
+                <div class="input-group">
+                    <label for="rate">Rate</label>
+                    <input type="number" id="rate" step="0.01" required>
+                </div>
+            `;
+        } else if (rateType === 'out') {
+            formContent.innerHTML = `
+                <div class="input-group">
+                    <label for="no">No.</label>
+                    <input type="number" id="no" required>
+                </div>
+                <div class="input-group">
+                    <label for="sn">SN</label>
+                    <input type="text" id="sn" required>
+                </div>
+                <div class="input-group">
+                    <label for="ob">OB</label>
+                    <select id="ob" required>
+                        <option value="SMZH K+">SMZH K+</option>
+                        <option value="SMMK K+">SMMK K+</option>
+                        <option value="KKH BBL">KKH BBL</option>
+                        <option value="SMZH BBL">SMZH BBL</option>
+                        <option value="SMMK SCB">SMMK SCB</option>
+                        <option value="SZSK K+">SZSK K+</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="paid-by">Paid By</label>
+                    <select id="paid-by" onchange="handlePaidByChange()" required>
+                        <option value="Kpay">Kpay</option>
+                        <option value="KBZ">KBZ</option>
+                        <option value="AYA">AYA</option>
+                        <option value="AyaPay">AyaPay</option>
+                        <option value="CB">CB</option>
+                        <option value="Yoma">Yoma</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Cash">Cash</option>
+                    </select>
+                </div>
+                <div class="input-group" id="kpay-details" style="display: none;">
+                    <label for="kpay-detail">Whose Kpay</label>
+                    <input type="text" id="kpay-detail">
+                </div>
+                <div class="input-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" required>
+                </div>
+                <div class="input-group">
+                    <label for="rate">Rate</label>
+                    <input type="number" id="rate" step="0.01" required>
+                </div>
+            `;
+        } else {
+            formContent.innerHTML = '';
+        }
+    }
+
+    function handlePaidByChange() {
+        const paidBy = document.getElementById('paid-by').value;
+        const kpayDetails = document.getElementById('kpay-details');
+        if (paidBy === 'Kpay') {
+            kpayDetails.style.display = 'block';
+            document.getElementById('kpay-detail').setAttribute('required', 'required');
+        } else {
+            kpayDetails.style.display = 'none';
+            document.getElementById('kpay-detail').removeAttribute('required');
+        }
+    }
+
+    function generateOutput() {
+        const rateType = document.getElementById('rate-type').value;
+        const no = document.getElementById('no').value;
+        const sn = document.getElementById('sn').value;
+        const amount = document.getElementById('amount').value;
+        const rate = document.getElementById('rate').value;
+        const result = rate * (amount / 100000);
+        let output = '';
+        
+        if (rateType === 'in') {
+            const rn = document.getElementById('rn').value;
+            const paidPayment = document.getElementById('paid-payment').value;
+            const bIn = document.getElementById('b-in').value;
+            
+            output = `
+                <p>No. ${no}</p>
+                <p>SN = ${sn}</p>
+                <p>RN = ${rn}</p>
+                <p>Paid Payment = ${paidPayment}</p>
+                <p>B In = ${bIn}</p>
+                <p>Amount = ${amount}</p>
+                <hr>
+                <p>Rate</p>
+                <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
+            `;
+        } else if (rateType === 'out') {
+            const ob = document.getElementById('ob').value;
+            const paidBy = document.getElementById('paid-by').value;
+            const kpayDetail = paidBy === 'Kpay' ? ` (${document.getElementById('kpay-detail').value})` : '';
+            
+            output = `
+                <p>No. ${no}</p>
+                <p>SN = ${sn}</p>
+                <p>OB = ${ob}</p>
+                <p>Paid By = ${paidBy}${kpayDetail}</p>
+                <p>Amount = ${amount}</p>
+                <hr>
+                <p>Rate</p>
+                <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
+            `;
+        }
+
+        document.getElementById('output').innerHTML = output + '<button class="copy-button" onclick="copyOutput()">Copy</button>';
+    }
+
+    function generateOutput() {
+    const rateType = document.getElementById('rate-type').value;
+    const no = document.getElementById('no').value;
+    const sn = document.getElementById('sn').value;
+    const amount = document.getElementById('amount').value;
+    const rate = document.getElementById('rate').value;
+    const result = rate * (amount / 100000);
+    let output = '';
+
+    if (rateType === 'in') {
+        const rn = document.getElementById('rn').value;
+        const paidPayment = document.getElementById('paid-payment').value;
+        const bIn = document.getElementById('b-in').value;
+
+        output = `
+            <p>No.${no}</p>
+            <p>SN=${sn}</p>
+            <p>RN=${rn}</p>
+            <p>Paid Payment=${paidPayment}</p>
+            <p>B In=${bIn}</p>
+            <p>Amount=${amount}</p>
+            <hr>
+            <p>Rate</p>
+            <p>${rate}×${(amount / 100000).toFixed(1)}= ${result.toFixed(1)}</p>
+        `;
+    } else if (rateType === 'out') {
+        const ob = document.getElementById('ob').value;
+        const paidBy = document.getElementById('paid-by').value;
+        const kpayDetail = paidBy === 'Kpay' ? ` (${document.getElementById('kpay-detail').value})` : '';
+
+        output = `
+            <p>No.${no}</p>
+            <p>SN=${sn}</p>
+            <p>OB=${ob}</p>
+            <p>Paid By=${paidBy}${kpayDetail}</p>
+            <p>Amount=${amount}</p>
+            <hr>
+            <p>Rate</p>
+            <p>${rate}×${(amount / 100000).toFixed(1)}= ${result.toFixed(1)}</p>
+        `;
+    }
+
+    document.getElementById('output').innerHTML = output + '<button class="copy-button" onclick="copyOutput()">Copy</button>';
+    }
+    function copyOutput() {
+    const outputElement = document.getElementById('output');
+    let outputText = '';
+
+    // Loop through each paragraph element in the output
+    outputElement.querySelectorAll('p').forEach(paragraph => {
+        // Append the text content of each paragraph followed by a newline character
+        outputText += paragraph.textContent.trim() + '\n';
+    });
+
+    // Remove trailing newline character
+    outputText = outputText.trim();
+
+    // Copy the formatted output text to the clipboard
+    navigator.clipboard.writeText(outputText)
+        .then(() => {
+            alert('Output copied to clipboard!');
+        })
+        .catch(err => {
+            console.error('Failed to copy output: ', err);
+        });
+}
+
+
+</script>
+</body>
+</html>
