@@ -129,11 +129,23 @@
                 </div>
                 <div class="input-group">
                     <label for="paid-payment">Paid Payment</label>
-                    <select id="paid-payment" required>
-                        <option value="Cash">Cash</option>
-                        <option value="Pay">Pay</option>
-                        <option value="Bank">Bank</option>
-                    </select>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="paid-payment-input" placeholder="Input">
+                        <select id="paid-payment" required style="width: auto;">
+                            <option value="Kpay">Kpay</option>
+                            <option value="KBZ">KBZ</option>
+                            <option value="AYA">AYA</option>
+                            <option value="AyaPay">AyaPay</option>
+                            <option value="CB">CB</option>
+                            <option value="Yoma">Yoma</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group" id="kpay-details" style="display: none;">
+                    <label for="kpay-detail">Whose Kpay</label>
+                    <input type="text" id="kpay-detail">
                 </div>
                 <div class="input-group">
                     <label for="b-in">B In</label>
@@ -233,6 +245,7 @@
         
         if (rateType === 'in') {
             const rn = document.getElementById('rn').value;
+            const paidPaymentInput = document.getElementById('paid-payment-input').value;
             const paidPayment = document.getElementById('paid-payment').value;
             const bIn = document.getElementById('b-in').value;
             
@@ -241,7 +254,7 @@
                 <p> </p>
                 <p>SN = ${sn}</p>
                 <p>RN = ${rn}</p>
-                <p>Paid Payment = ${paidPayment}</p>
+                <p>Paid Payment = ${paidPaymentInput} ${paidPayment}</p>
                 <p>B In = ${bIn}</p>
                 <p>Amount = ${amount}</p>
                 <p>-----</p>
