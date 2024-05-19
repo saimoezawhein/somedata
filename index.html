@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Mai Soong</title>
+    <title>Payment Details Generator</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -93,7 +93,7 @@
 <div class="container">
     <h1>Mai Soong</h1>
     <div class="input-group">
-        <label for="rate-type">Chose In or Out</label>
+        <label for="rate-type">Rate Type</label>
         <select id="rate-type" onchange="changeForm()">
             <option value="">Select</option>
             <option value="in">In</option>
@@ -178,16 +178,19 @@
                 </div>
                 <div class="input-group">
                     <label for="paid-by">Paid By</label>
-                    <select id="paid-by" onchange="handlePaidByChange()" required>
-                        <option value="Kpay">Kpay</option>
-                        <option value="KBZ">KBZ</option>
-                        <option value="AYA">AYA</option>
-                        <option value="AyaPay">AyaPay</option>
-                        <option value="CB">CB</option>
-                        <option value="Yoma">Yoma</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Cash">Cash</option>
-                    </select>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="paid-by-input" placeholder="Input">
+                        <select id="paid-by" onchange="handlePaidByChange()" required style="width: auto;">
+                            <option value="Kpay">Kpay</option>
+                            <option value="KBZ">KBZ</option>
+                            <option value="AYA">AYA</option>
+                            <option value="AyaPay">AyaPay</option>
+                            <option value="CB">CB</option>
+                            <option value="Yoma">Yoma</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="input-group" id="kpay-details" style="display: none;">
                     <label for="kpay-detail">Whose Kpay</label>
@@ -241,23 +244,23 @@
                 <p>Paid Payment = ${paidPayment}</p>
                 <p>B In = ${bIn}</p>
                 <p>Amount = ${amount}</p>
-                <p>----------</p>
+                <p>-----</p>
                 <p>Rate</p>
                 <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
             `;
         } else if (rateType === 'out') {
             const ob = document.getElementById('ob').value;
+            const paidByInput = document.getElementById('paid-by-input').value;
             const paidBy = document.getElementById('paid-by').value;
-            const kpayDetail = paidBy === 'Kpay' ? ` (${document.getElementById('kpay-detail').value})` : '';
             
             output = `
                 <p>No. ${no}</p>
                 <p> </p>
                 <p>SN = ${sn}</p>
                 <p>OB = ${ob}</p>
-                <p>Paid By = ${paidBy}${kpayDetail}</p>
+                <p>Paid By = ${paidByInput} ${paidBy}</p>
                 <p>Amount = ${amount}</p>
-                <p>----------</p>
+                <p>-----</p>
                 <p>Rate</p>
                 <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
             `;
