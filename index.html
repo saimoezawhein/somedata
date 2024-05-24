@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Payment Details Generator</title>
+    <title>Mai Soong</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -109,10 +109,17 @@
 </div>
 
 <script>
+    function formatNumberInput(input) {
+        // Remove non-numeric characters
+        input.value = input.value.replace(/\D/g, '');
+        // Format the number with commas
+        input.value = parseInt(input.value).toLocaleString();
+    }
+
     function changeForm() {
         const rateType = document.getElementById('rate-type').value;
         const formContent = document.getElementById('form-content');
-        
+
         if (rateType === 'in') {
             formContent.innerHTML = `
                 <div class="input-group">
@@ -143,10 +150,6 @@
                         </select>
                     </div>
                 </div>
-                <div class="input-group" id="kpay-details" style="display: none;">
-                    <label for="kpay-detail">Whose Kpay</label>
-                    <input type="text" id="kpay-detail">
-                </div>
                 <div class="input-group">
                     <label for="b-in">B In</label>
                     <select id="b-in" required>
@@ -160,11 +163,11 @@
                 </div>
                 <div class="input-group">
                     <label for="amount">Amount</label>
-                    <input type="number" id="amount" required>
+                    <input type="text" id="amount" required oninput="formatNumberInput(this)">
                 </div>
                 <div class="input-group">
                     <label for="rate">Rate</label>
-                    <input type="number" id="rate" step="0.01" required>
+                    <input type="text" id="rate" step="0.01" required oninput="formatNumberInput(this)">
                 </div>
             `;
         } else if (rateType === 'out') {
@@ -192,7 +195,7 @@
                     <label for="paid-by">Paid By</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="text" id="paid-by-input" placeholder="Input">
-                        <select id="paid-by" onchange="handlePaidByChange()" required style="width: auto;">
+                        <select id="paid-by" required style="width: auto;">
                             <option value="Kpay">Kpay</option>
                             <option value="KBZ">KBZ</option>
                             <option value="AYA">AYA</option>
@@ -204,17 +207,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="input-group" id="kpay-details" style="display: none;">
-                    <label for="kpay-detail">Whose Kpay</label>
-                    <input type="text" id="kpay-detail">
-                </div>
                 <div class="input-group">
                     <label for="amount">Amount</label>
-                    <input type="number" id="amount" required>
+                    <input type="text" id="amount" required oninput="formatNumberInput(this)">
                 </div>
                 <div class="input-group">
                     <label for="rate">Rate</label>
-                    <input type="number" id="rate" step="0.01" required>
+                    <input type="text" id="rate" step="0.01" required oninput="formatNumberInput(this)">
                 </div>
             `;
         } else {
@@ -222,33 +221,21 @@
         }
     }
 
-    function handlePaidByChange() {
-        const paidBy = document.getElementById('paid-by').value;
-        const kpayDetails = document.getElementById('kpay-details');
-        if (paidBy === 'Kpay') {
-            kpayDetails.style.display = 'block';
-            document.getElementById('kpay-detail').setAttribute('required', 'required');
-        } else {
-            kpayDetails.style.display = 'none';
-            document.getElementById('kpay-detail').removeAttribute('required');
-        }
-    }
-
     function generateOutput() {
         const rateType = document.getElementById('rate-type').value;
         const no = document.getElementById('no').value;
         const sn = document.getElementById('sn').value;
-        const amount = document.getElementById('amount').value;
-        const rate = document.getElementById('rate').value;
-        const result = rate * (amount / 100000);
+        const amount = document.getElementById('amount').value.replace(/,/g, '');
+        const rate = document.getElementById('rate').value.replace(/,/g, '');
+        const result = (rate * (amount / 100000)).toFixed(2);
         let output = '';
-        
+
         if (rateType === 'in') {
             const rn = document.getElementById('rn').value;
             const paidPaymentInput = document.getElementById('paid-payment-input').value;
             const paidPayment = document.getElementById('paid-payment').value;
             const bIn = document.getElementById('b-in').value;
-            
+
             output = `
                 <p>No. ${no}</p>
                 <p> </p>
@@ -256,26 +243,26 @@
                 <p>RN = ${rn}</p>
                 <p>Paid Payment = ${paidPaymentInput} ${paidPayment}</p>
                 <p>B In = ${bIn}</p>
-                <p>Amount = ${amount}</p>
+                <p>Amount = ${parseInt(amount).toLocaleString()}</p>
                 <p>-----</p>
                 <p>Rate</p>
-                <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
+                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result}</p>
             `;
         } else if (rateType === 'out') {
             const ob = document.getElementById('ob').value;
             const paidByInput = document.getElementById('paid-by-input').value;
             const paidBy = document.getElementById('paid-by').value;
-            
+
             output = `
                 <p>No. ${no}</p>
                 <p> </p>
                 <p>SN = ${sn}</p>
                 <p>OB = ${ob}</p>
                 <p>Paid By = ${paidByInput} ${paidBy}</p>
-                <p>Amount = ${amount}</p>
+                <p>Amount = ${parseInt(amount).toLocaleString()}</p>
                 <p>-----</p>
                 <p>Rate</p>
-                <p>${rate} × ${(amount / 100000).toFixed(1)} = ${result.toFixed(1)}</p>
+                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result}</p>
             `;
         }
 
