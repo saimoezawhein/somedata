@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Mai Soong</title>
+    <title>Payment Details Generator</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: #f4f7f9;
+            color: #333;
             margin: 0;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
         }
         .container {
             max-width: 600px;
             margin: 40px auto;
-            background: var(--container-background-color);
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            transition: background-color 0.3s;
         }
         h1 {
             font-size: 24px;
             margin-bottom: 20px;
-            color: var(--primary-color);
+            color: #007BFF;
         }
         .input-group {
             margin-bottom: 15px;
@@ -38,20 +36,20 @@
         .input-group input, .input-group select {
             width: calc(100% - 16px);
             padding: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             transition: border-color 0.3s;
         }
         .input-group input:focus, .input-group select:focus {
-            border-color: var(--primary-color);
+            border-color: #007BFF;
             outline: none;
         }
         .output {
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid var(--border-color);
-            background-color: var(--output-background-color);
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
             position: relative;
             border-radius: 4px;
         }
@@ -63,7 +61,7 @@
             top: 10px;
             right: 10px;
             padding: 5px 10px;
-            background-color: var(--primary-color);
+            background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 4px;
@@ -71,14 +69,14 @@
             transition: background-color 0.3s;
         }
         .copy-button:hover {
-            background-color: var(--primary-color-hover);
+            background-color: #0056b3;
         }
         button {
             display: inline-block;
             margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
-            background-color: var(--primary-color);
+            background-color: #007BFF;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -86,7 +84,7 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: var(--primary-color-hover);
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -109,7 +107,7 @@
 
     <div class="output" id="output"></div>
 </div>
-    
+
 <script>
     function formatNumberInput(input) {
         // Remove non-numeric characters
@@ -248,7 +246,7 @@
                 <p>Amount = ${parseInt(amount).toLocaleString()}</p>
                 <p>-----</p>
                 <p>Rate</p>
-                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result}</p>
+                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result.toLocaleString()}</p>
             `;
         } else if (rateType === 'out') {
             const ob = document.getElementById('ob').value;
@@ -264,7 +262,7 @@
                 <p>Amount = ${parseInt(amount).toLocaleString()}</p>
                 <p>-----</p>
                 <p>Rate</p>
-                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result}</p>
+                <p>${parseFloat(rate).toLocaleString()} × ${(amount / 100000).toFixed(1)} = ${result.toLocaleString()}</p>
             `;
         }
 
